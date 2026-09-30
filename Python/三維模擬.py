@@ -6,7 +6,9 @@ FPS = 60
 near = 0.1
 far = 100
 C_eye = np.array([-0.3,4.,8.])
-C_direction = np.array([0.,0.,-1.])
+C_direction = np.array([0.,0.,-1.])#
+Vx = np.array([1.,0.,0.])#
+Vy = np.array([0.,1.,0.])#
 C_up = np.array([0.,1.,0.])
 FOV = 60
 H = int(1080 / 2)
@@ -105,12 +107,12 @@ def draw_edges(points, screen):
             pg.draw.line(screen, (255,255,255), proj[e[0]], proj[e[1]], 2)
 
 def mov(key):
-    global C_eye,C_direction,C_up
-    speed = 0.01
+    global C_eye,C_direction,C_up,FOV
+    speed = 0.1
     view_vec = speed * C_direction
     view_forward = [view_vec[0],0.,view_vec[2]]
-    view_forward = view_forward/np.linalg.norm(view_forward)
-    view_right = 0.01*np.cross(view_vec,C_up)/np.linalg.norm(np.cross(view_vec,C_up))
+    view_forward = view_forward/np.linalg.norm(view_forward)*speed
+    view_right = np.cross(view_vec,C_up)/np.linalg.norm(np.cross(view_vec,C_up))*speed
     if key[pg.K_w]:
         C_eye += view_forward
     if key[pg.K_s]:
@@ -127,6 +129,10 @@ def mov(key):
         C_eye += view_vec
     if key[pg.K_DOWN]:
         C_eye -= view_vec
+    if key[pg.K_RIGHT] and FOV < 179:
+        FOV += 1
+    if key[pg.K_LEFT] and FOV > 1:
+        FOV -= 1
 
 def mouse_mov(old_pos,Vx,Vy):
     key = pg.mouse.get_pressed()
@@ -141,7 +147,7 @@ def mouse_mov(old_pos,Vx,Vy):
                               [Vx[1],Vy[1]],
                               [Vx[2],Vy[2]]])
             vec = F_mat @ move
-            sens = 0.05
+            sens = 0.01
             vec_out = np.array([vec[0][0]*sens,vec[1][0]*sens,vec[2][0]*sens])
         return pos, vec_out
     else:
@@ -161,29 +167,29 @@ if __name__ == "__main__":
         Point(-2,  2, -2, (255, 255, 255))  # 7
     ]
 
-    angle = 0
-    M_Trans_vec = np.array([0.,0.,0.])
-
     while Run:
         clock.tick(FPS)
         screen.fill((0,0,0))
+        old_mouse_pos,V_vec = mouse_mov(old_mouse_pos,Vx,Vy)
+        d_camera_view = C_direction + V_vec                       #
+        d_camera_view = d_camera_view/np.linalg.norm(d_camera_view)   #
+        if np.dot(d_camera_view,C_up) > 0.99:   #避免攝影機翻轉
+            d_camera_view = C_direction
+        else:
+            C_direction = d_camera_view
         V,Vx,Vy = view_matrix(eye=C_eye,vec=C_direction,up=C_up)
-        old_mouse_pos,vec = mouse_mov(old_mouse_pos,Vx,Vy)
-        vec = [vec[1] + vec[2],vec[0] + vec[2],vec[0] + vec[1]]
-        M_Trans_vec = M_Trans_vec + vec
-        M = model_matrix(rotate=M_Trans_vec)
-        P = projection_matrix(near,far)
+        M = model_matrix()
+        P = projection_matrix(near,far,FOV,W/H)
         PVM = P @ V @ M
         update_points(points,PVM)
         draw_edges(points, screen)#
         for p in points:
             p.draw(screen)##
-        angle += 0.
         key = pg.key.get_pressed()
         for event in pg.event.get():
             if event.type == pg.QUIT or key[pg.K_ESCAPE]:
                 Run = 0
         mov(key)
-        pg.display.set_caption(f'FPS {int(clock.get_fps())}\tEye: {C_eye}')#
+        pg.display.set_caption(f'FPS {int(clock.get_fps())}\tEye: {C_eye}\tFOV: {FOV}')#
         pg.display.update()
 pg.quit()
