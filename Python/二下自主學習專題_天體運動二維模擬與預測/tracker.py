@@ -46,7 +46,6 @@ def main(data_X_old): #data_X {id: [z_x, z_y]}
   data_X = noise.main(data_X_old)
   for point_id, z in data_X.items():
     z_np = np.array(z, dtype=np.float64)
-
     if point_id not in X:
       # 初始狀態：位置設為 z，初速度設為 0
       # 狀態向量：[x, y, vx, vy, ax, ay]
@@ -54,7 +53,6 @@ def main(data_X_old): #data_X {id: [z_x, z_y]}
       initial_x[0:2] = z_np
       # P 矩陣：對位置給予小不確定性，對速度/加速度給予大不確定性
       initial_p = np.eye(6) * 0.1
-
       X[point_id] = (initial_x, initial_p)
       return_pred[point_id] = [(z_np[0], z_np[1])]
       continue
