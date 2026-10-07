@@ -1,40 +1,19 @@
 # Python 語言實作內容概述
 
----
+**高二上自主學習_Flappy Bird**
 
-**二下自主學習專題_天體運動二維模擬與預測**
+* 類別Bird定義角色屬性與照片節錄位置
+* 類別BackGround定義背景屬性、照片位置及位移邏輯->為了連續輸出背景一次兩張同時運作顯示
+* 類別Ground同BackGround
+* 類別Tube定義水管屬性、照片位置以及照片裁剪方式
+* move定義水管移動邏輯與消失時機
+* Menu_main定義執行至按下跳躍鍵前的非遊戲畫面
+* main定義遊戲主迴圈
+* Player_data_write紀錄遊玩分數至"Player_data.txt"
 
-main.py程式概述：
-* 引用tracker.py作為質點預測程式庫
-* 使用pygame函式庫作質點數據可視化
-* 類別Ball定義質點物理性質及是否受引力影響
-* 以簡化韋爾萊積分法進行加速度的運算，減少時間不連續性的加速度誤差
-* 前綴fix_的重力運算函式以numpy運算速度的優勢改善多質點的運算效能問題
-* 定義三種天體模式加入主函式手動修改
+[程式GIF](https://github.com/James583476/Program/blob/main/Python/image/gif_5.gif)
 
-tracker.py程式概述：
-* 使用修改版卡爾曼濾波（統稱KFA）理論預測非線性數據
-* 規定輸入與輸出質點座標格式
-* 紀錄歷史座標資料用於下一次預測
-
-[程式GIF](https://github.com/James583476/Program/blob/main/Python/image/gif_1.gif)
-
----
-
-**三維模擬.py**
-
-參考OpenGL空間投影邏輯，以平面遊戲開發程式庫pygame繪製空間座標：
-* 類別Point定義立方體頂點屬性
-* model_matrix作為物件基本行為定義（程式中未描寫物件行為）
-* view_matrix定義相機行為（輸出相機的xy座標軸作為視角變動依據）
-* projection_matrix描述透視投影邏輯
-* 點更新及繪製邊緣（尚未以質點深度排序更新順序）
-* mov定義相機移動邏輯
-* mouse_mov定義視角變動邏輯（以滑鼠向量做view_matrix輸出之相機xy軸分量）
-* 主迴圈執行矩陣運算與事件偵測
-
-[程式GIF](https://github.com/James583476/Program/blob/main/Python/image/gif_2.gif)
-![](Python/image/image_1.png)
+![](image/image_5.png)
 
 ---
 
@@ -49,6 +28,8 @@ tracker.py程式概述：
 * 主迴圈中實際模擬繩子的方式為  **質點位置更新->以兩質點權重修正繩長->修正質點位置->修正質點速度與加速度**
 
 [程式GIF](https://github.com/James583476/Program/blob/main/Python/image/gif_3.gif)
+
+![](image/image_3.png)
 
 ---
 
@@ -69,17 +50,44 @@ tracker.py程式概述：
 
 [程式GIF](https://github.com/James583476/Program/blob/main/Python/image/gif_4.gif)
 
+![](image/image_4.png)
+
 ---
 
-**高二上自主學習_Flappy Bird**
+**二下自主學習專題_天體運動二維模擬與預測**
 
-* 類別Bird定義角色屬性與照片節錄位置
-* 類別BackGround定義背景屬性、照片位置及位移邏輯->為了連續輸出背景一次兩張同時運作顯示
-* 類別Ground同BackGround
-* 類別Tube定義水管屬性、照片位置以及照片裁剪方式
-* move定義水管移動邏輯與消失時機
-* Menu_main定義執行至按下跳躍鍵前的非遊戲畫面
-* main定義遊戲主迴圈
-* Player_data_write紀錄遊玩分數至"Player_data.txt"
+main.py程式概述：
+* 引用tracker.py作為質點預測程式庫
+* 使用pygame函式庫作質點數據可視化
+* 類別Ball定義質點物理性質及是否受引力影響
+* 以簡化韋爾萊積分法進行加速度的運算，減少時間不連續性的加速度誤差
+* 前綴fix_的重力運算函式以numpy運算速度的優勢改善多質點的運算效能問題
+* 定義三種天體模式加入主函式手動修改
 
-[程式GIF](https://github.com/James583476/Program/blob/main/Python/image/gif_5.gif)
+tracker.py程式概述：
+* 使用修改版卡爾曼濾波（統稱KFA）理論預測非線性數據
+* 規定輸入與輸出質點座標格式
+* 紀錄歷史座標資料用於下一次預測
+
+[程式GIF](https://github.com/James583476/Program/blob/main/Python/image/gif_1.gif)
+
+![](image/image_1.png)
+
+---
+
+**三維模擬.py**
+
+參考OpenGL空間投影邏輯，以平面遊戲開發程式庫pygame繪製空間座標：
+* 類別Point定義立方體頂點屬性
+* model_matrix作為物件基本行為定義（程式中未描寫物件行為）
+* view_matrix定義相機行為（輸出相機的xy座標軸作為視角變動依據）
+* projection_matrix描述透視投影邏輯
+* 點更新及繪製邊緣（尚未以質點深度排序更新順序）
+* mov定義相機移動邏輯
+* mouse_mov定義視角變動邏輯（以滑鼠向量做view_matrix輸出之相機xy軸分量）
+* 主迴圈執行矩陣運算與事件偵測
+
+[程式GIF](https://github.com/James583476/Program/blob/main/Python/image/gif_2.gif)
+
+![](image/image_2.png)
+
